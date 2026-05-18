@@ -1,0 +1,12 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+workspace/*/voice.mp3
+workspace/*/subs.srt
+workspace/*/images/
+workspace/*/draft/
+workspace/*/news.json
+workspace/*/script.txt
+assets/bgm/*.mp3
+assets/templates/known_good_draft.json

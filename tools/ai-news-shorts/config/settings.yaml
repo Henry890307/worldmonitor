@@ -1,0 +1,51 @@
+pipeline:
+  workspace_root: workspace
+  template_path: assets/templates/known_good_draft.json
+  bgm_path: assets/bgm/chill.mp3
+
+capcut:
+  projects_dir: '%LocalAppData%\CapCut\User Data\Projects\com.lveditor.draft'
+
+video:
+  width: 1080
+  height: 1920
+  duration_sec: 60
+  image_count: 3
+
+voice:
+  voice_id: zh-TW-HsiaoChenNeural
+  rate: '+0%'
+  volume: '+0%'
+
+whisper:
+  model: medium
+  device: auto
+  compute_type: auto
+  language: null
+
+script:
+  model: claude-sonnet-4-6
+  target_chars: 180
+  system: |
+    You write 60-second short-video scripts (Chinese with occasional English tech terms).
+    Style: punchy hook, 3 concrete points, clear CTA. Target ~180 characters of Chinese.
+    Output plain text only, no markdown, no stage directions.
+
+scoring:
+  upvote_weight: 0.4
+  comment_weight: 0.3
+  velocity_weight: 0.2
+  age_decay_weight: 0.1
+  min_score: 100
+  min_comments: 30
+  keywords:
+    - AI
+    - GPT
+    - Claude
+    - LLM
+    - model
+    - OpenAI
+    - Anthropic
+    - agent
+    - Gemini
+    - DeepSeek
