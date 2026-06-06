@@ -96,12 +96,57 @@ pip install -r requirements.txt
 |------|
 | `hunyuanvideo15_vae_fp16.safetensors` |
 
-### 3.4 低 VRAM（8–12GB）：改用 GGUF 量化版
+### 3.4 fp8 省顯存變體（12–16GB 用）
+
+精度選 `fp8_scaled` 的對應檔名（diffusion_models/）：
+
+| 用途 | 檔名 |
+|------|------|
+| 文生影片 480p | `hunyuanvideo1.5_480p_t2v_cfg_distilled_fp8_scaled.safetensors` |
+| 圖生影片 720p | `hunyuanvideo1.5_720p_i2v_cfg_distilled_fp8_scaled.safetensors` |
+| 超解析 720p | `hunyuanvideo1.5_720p_sr_distilled_fp8_scaled.safetensors` |
+
+### 3.5 低 VRAM（8–12GB）：改用 GGUF 量化版
 
 - 需安裝節點：**ComfyUI-GGUF**（city96）→ <https://github.com/city96/ComfyUI-GGUF>
 - 或官方 1.5 插件：<https://github.com/yuanyuan-spec/comfyui_hunyuanvideo_1.5_plugin>
 - GGUF 模型（Q8 / Q6 / Q4）丟到 `ComfyUI/models/unet/` 或 `diffusion_models/`，依插件說明。
 - 原則：VRAM 越小選越低的 Q（Q4 最省但品質略降）。
+
+### 3.6 ✅ 一鍵下載腳本（推薦，免手動逐檔抓）
+
+我已準備好下載腳本：**`scripts/download_hunyuanvideo_models.sh`**（會自動抓文字編碼器 + VAE + 你選的 diffusion 模型，放進正確資料夾）。
+
+先裝 HuggingFace CLI：
+
+```bash
+pip install -U "huggingface_hub[cli]"
+```
+
+執行（依你的顯卡挑參數）：
+
+```bash
+# 8-12GB 顯卡、只玩文生影片（省顯存 fp8）
+./scripts/download_hunyuanvideo_models.sh -d /path/to/ComfyUI -m t2v -p fp8
+
+# 16-24GB、要圖生影片 + 1080p 放大（fp16）
+./scripts/download_hunyuanvideo_models.sh -d /path/to/ComfyUI -m i2v -p fp16 -s
+
+# 全都要（t2v + i2v + sr）
+./scripts/download_hunyuanvideo_models.sh -d /path/to/ComfyUI -m all -p fp16
+```
+
+參數說明：
+
+| 參數 | 意義 | 可填 |
+|------|------|------|
+| `-d` | ComfyUI 根目錄（內含 `models/`） | 路徑 |
+| `-m` | 模式 | `t2v` / `i2v` / `all` |
+| `-p` | 精度 | `fp16` / `fp8` |
+| `-s` | 加抓超解析(sr)放大模型 | （加上即啟用） |
+
+> Windows 使用者：用 **Git Bash** 或 **WSL** 執行此腳本；或直接照第 3.1–3.3 節手動下載。
+> 腳本特性：已下載的檔會自動略過、可重複執行續傳。
 
 ---
 
@@ -146,9 +191,9 @@ ComfyUI 內建模板最穩：
 - [ ] 1. 確認 GPU / VRAM（決定走 fp16 還是 fp8 / GGUF）
 - [ ] 2. 安裝或**更新 ComfyUI 到最新版**
 - [ ] 3. 安裝 / 更新 **ComfyUI Manager**
-- [ ] 4. 建好資料夾：`models/diffusion_models`、`models/text_encoders`、`models/vae`（、`models/clip_vision`）
-- [ ] 5. 下載第 3 節模型，放到對應資料夾
-- [ ] 6.（VRAM 小才需要）裝 **ComfyUI-GGUF** 並改用 GGUF 模型
+- [ ] 4. 安裝 HF CLI：`pip install -U "huggingface_hub[cli]"`
+- [ ] 5. 跑一鍵下載腳本：`scripts/download_hunyuanvideo_models.sh -d <ComfyUI路徑> -m <t2v/i2v/all> -p <fp16/fp8>`（見 3.6 節）
+- [ ] 6.（VRAM 8–12GB 才需要）裝 **ComfyUI-GGUF** 並改用 GGUF 模型
 - [ ] 7. 載入內建 Hunyuan Video 模板（T2V / I2V）
 - [ ] 8. Manager → Install Missing Custom Nodes 補齊紅色節點
 - [ ] 9. 重啟 ComfyUI → 跑一次低張數（例如 480p、49 frames）測試
