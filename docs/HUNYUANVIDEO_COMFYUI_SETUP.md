@@ -145,8 +145,25 @@ pip install -U "huggingface_hub[cli]"
 | `-p` | 精度 | `fp16` / `fp8` |
 | `-s` | 加抓超解析(sr)放大模型 | （加上即啟用） |
 
-> Windows 使用者：用 **Git Bash** 或 **WSL** 執行此腳本；或直接照第 3.1–3.3 節手動下載。
+> Windows 使用者：用 **Git Bash** 或 **WSL** 執行 `.sh`；或直接用下方 **PowerShell 版**。
 > 腳本特性：已下載的檔會自動略過、可重複執行續傳。
+
+#### Windows PowerShell 版：`scripts/download_hunyuanvideo_models.ps1`
+
+功能與 `.sh` 完全相同，原生在 PowerShell 跑（免裝 Git Bash/WSL）：
+
+```powershell
+# 8-12GB 顯卡、只玩文生影片（省顯存 fp8）
+.\scripts\download_hunyuanvideo_models.ps1 -ComfyuiDir "C:\ComfyUI" -Mode t2v -Precision fp8
+
+# 16-24GB、要圖生影片 + 1080p 放大
+.\scripts\download_hunyuanvideo_models.ps1 -ComfyuiDir "C:\ComfyUI" -Mode i2v -Precision fp16 -WithSr
+
+# 全都要
+.\scripts\download_hunyuanvideo_models.ps1 -ComfyuiDir "C:\ComfyUI" -Mode all -Precision fp16
+```
+
+> 若 PowerShell 擋執行原則，先跑：`Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`
 
 ---
 
